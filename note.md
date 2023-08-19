@@ -25,5 +25,10 @@ module.exports = {
 }
 ```
 
+**Migration**:
+```
+npx sequelize-cli db:migrate
+```
+
 
 
