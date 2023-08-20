@@ -3,7 +3,7 @@ import userService from '../services/userService';
 
 
 const handleUserLogin = async (req, res) => {
-    const {email, password} = req.body;
+    const { email, password } = req.body;
 
     // Check email || password empty
     if (!email || !password) {
@@ -21,8 +21,8 @@ const handleUserLogin = async (req, res) => {
 }
 
 const handleGetAllUsers = async (req, res) => {
-    const id = req.body.id;
-    
+    const id = req.query.id;
+
     if (!id) {
         return res.status(500).json({
             errCode: 1,
@@ -35,7 +35,32 @@ const handleGetAllUsers = async (req, res) => {
     return res.status(200).json({
         errCode: 0,
         errMessage: "OK",
-        user: dataUser
+        users: dataUser
+    })
+}
+
+const handleCreateNewUser = async (req, res) => {
+    const userData = req.body;
+    const info = await userService.createNewUser(userData);
+    return res.status(200).json({
+        info
+    })
+}
+
+const handleDeleteUser = async (req, res) => {
+    const id = req.body.id;
+    const info = await userService.deleteUserById(id);
+
+    return res.status(200).json({
+        info
+    })
+}
+
+const handleEditUser = async (req, res) => {
+    const data = req.body;
+    const info = await userService.updateUser(data);
+    return res.status(200).json({
+        info
     })
 }
 
@@ -43,4 +68,7 @@ const handleGetAllUsers = async (req, res) => {
 module.exports = {
     handleUserLogin,
     handleGetAllUsers,
+    handleCreateNewUser,
+    handleDeleteUser,
+    handleEditUser,
 }
