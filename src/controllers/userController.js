@@ -40,10 +40,10 @@ const handleGetAllUsers = async (req, res) => {
 }
 
 const handleCreateNewUser = async (req, res) => {
-    const userData = req.body;
+    const userData = req.body.data;
     const info = await userService.createNewUser(userData);
     return res.status(200).json({
-        info
+        ...info
     })
 }
 
@@ -52,15 +52,15 @@ const handleDeleteUser = async (req, res) => {
     const info = await userService.deleteUserById(id);
 
     return res.status(200).json({
-        info
+        ...info
     })
 }
 
 const handleEditUser = async (req, res) => {
-    const data = req.body;
+    const data = req.body.data;
     const info = await userService.updateUser(data);
     return res.status(200).json({
-        info
+        ...info
     })
 }
 
