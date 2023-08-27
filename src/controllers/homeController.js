@@ -17,7 +17,6 @@ const listUser = async (req, res) => {
 
 const handleCreateUser = async (req, res) => {
     let message = await services.createNewUser(req.body);
-    console.log(message);
     return res.status(200).json({
         stata: 200,
         message: "success",
