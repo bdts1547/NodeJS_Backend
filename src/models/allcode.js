@@ -17,11 +17,11 @@ module.exports = (sequelize, DataTypes) => {
     key: DataTypes.STRING,
     type: DataTypes.STRING,
     valueEn: DataTypes.STRING,
-    valueVn: DataTypes.STRING,
+    valueVi: DataTypes.STRING,
 
   }, {
     sequelize,
-    modelName: 'allcode',
+    modelName: 'allcodes',
   });
   return allcode;
 };

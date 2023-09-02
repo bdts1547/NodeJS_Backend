@@ -1,31 +1,32 @@
+import { resolve } from 'app-root-path';
 import db from '../models/index';
 import bcrypt from 'bcryptjs';
 
 const salt = bcrypt.genSaltSync(10);
 
 const isExistEmail = (email) => {
-    return new Promise(async(resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
         try {
             const user = await db.user.findOne({
-                where: {email: email}
+                where: { email: email }
             })
             if (user) {
                 resolve(true);
-            } 
+            }
             resolve(false);
         } catch (error) {
             reject(error)
         }
-        
+
     })
 }
 
 const getUserLogin = (email, password) => {
-    return new Promise(async(resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
         try {
             const loginInfo = {};
             const user = await db.user.findOne({
-                attributes: ['email', 'roleId', 'password'],
+                attributes: ['email', 'roleId', 'password', 'firstName'],
                 where: {
                     email: email
                 },
@@ -59,10 +60,10 @@ const getUserLogin = (email, password) => {
 }
 
 const getAllUsers = (userId) => {
-    return new Promise(async(resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
         try {
             let dataUser;
-            if (userId === "all") {
+            if (userId === "ALL") {
                 dataUser = await db.user.findAll({
                     attributes: {
                         exclude: ['password']
@@ -70,7 +71,7 @@ const getAllUsers = (userId) => {
                 })
             } else {
                 dataUser = await db.user.findOne({
-                    where: {id: userId},
+                    where: { id: userId },
                     attributes: {
                         exclude: ['password']
                     }
@@ -79,7 +80,7 @@ const getAllUsers = (userId) => {
 
             resolve(dataUser);
 
-            
+
         } catch (error) {
             reject(error)
         }
@@ -87,7 +88,7 @@ const getAllUsers = (userId) => {
 }
 
 const createNewUser = (data) => {
-    return new Promise(async(resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
         try {
             const _isExistEmail = await isExistEmail(data.email);
             if (_isExistEmail) {
@@ -98,16 +99,18 @@ const createNewUser = (data) => {
             } else {
                 const hashPassword = await bcrypt.hashSync(data.password, salt);
                 const newUser = await db.user.create({
-                    email: data.email,
                     password: hashPassword,
+                    email: data.email,
                     firstName: data.firstName,
                     lastName: data.lastName,
                     address: data.address,
-                    gender: data.gender === '1' ? true : false,
+                    gender: data.gender,
                     roleId: data.roleId,
+                    positionId: data.positionId,
                     phoneNumber: data.phoneNumber,
+                    image: data.image,
                 })
-    
+
                 resolve({
                     errCode: 0,
                     message: "User is created!"
@@ -122,10 +125,10 @@ const createNewUser = (data) => {
 }
 
 const deleteUserById = (userId) => {
-    return new Promise(async(resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
         try {
             const isDelete = await db.user.destroy({
-                where: {id: userId}
+                where: { id: userId }
             })
             if (isDelete) {
                 resolve({
@@ -138,7 +141,7 @@ const deleteUserById = (userId) => {
                     message: "User's not found!"
                 });
             }
-            
+
         } catch (error) {
             reject(error)
         }
@@ -146,7 +149,7 @@ const deleteUserById = (userId) => {
 }
 
 const updateUser = (data) => {
-    return new Promise(async(resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
         try {
             if (!data.id) {
                 resolve({
@@ -155,7 +158,7 @@ const updateUser = (data) => {
                 })
             } else {
                 const user = await db.user.findOne({
-                    where: {id: data.id},
+                    where: { id: data.id },
                     raw: false
                 })
 
@@ -165,9 +168,14 @@ const updateUser = (data) => {
                         message: "User's not found"
                     })
                 } else {
-                    user.email = data.email;
                     user.firstName = data.firstName;
                     user.lastName = data.lastName;
+                    user.address = data.address;
+                    user.gender = data.gender;
+                    user.roleId = data.roleId;
+                    user.positionId = data.positionId;
+                    user.phoneNumber = data.phoneNumber;
+                    user.image = data.image;
 
                     user.save();
                     resolve({
@@ -182,6 +190,30 @@ const updateUser = (data) => {
     })
 }
 
+const getAllCode = (type) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            if (!type) {
+                resolve({
+                    errCode: 1,
+                    errMessage: "Missing required params"
+                });
+            } else {
+                const res = {};
+                const data = await db.allcodes.findAll({
+                    where: { type: type }
+                })
+                resolve({
+                    errCode: 0,
+                    data
+                });
+            }
+        } catch (error) {
+            reject(error)
+        }
+    })
+}
+
 
 module.exports = {
     getUserLogin,
@@ -189,4 +221,5 @@ module.exports = {
     createNewUser,
     deleteUserById,
     updateUser,
+    getAllCode,
 }
