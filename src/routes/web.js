@@ -1,6 +1,7 @@
 import express from "express";
 import homeController from '../controllers/homeController';
-import userController from '../controllers/userController'
+import userController from '../controllers/userController';
+import doctorController from '../controllers/doctorController';
 
 const router = express.Router();
 
@@ -20,6 +21,10 @@ const initWebRoutes = (app) => {
     router.put('/api/edit-user', userController.handleEditUser);
 
     router.get('/api/allcode', userController.handleGetAllCode);
+
+    // home
+    router.get('/api/top-doctors-home', doctorController.handleGetTopDoctors); // todo
+
 
 
     return app.use('', router);
