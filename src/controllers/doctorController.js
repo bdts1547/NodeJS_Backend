@@ -12,7 +12,41 @@ const handleGetTopDoctors = async (req, res) => {
     })
 }
 
+const hanldeGetAllDoctors = async (req, res) => {
+    try {
+        const info = await doctorService.getAllDoctors();
+        return res.status(200).json(info)
+    } catch (error) {
+        return res.status(500).json({
+            errCode: -1,
+            message: "Error from server"
+        })
+    }
+}
+
+const handleCreateDetailDoctor = async (req, res) => {
+    try {
+        const data = req.body.data;
+        console.log(data)
+        const info = await doctorService.createDetailInforDoctor(data);
+
+        return res.status(200).json({
+            ...info
+        })
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json({
+            errCode: -1,
+            message: "Error from server"
+        })
+        
+    }
+}
+
 
 module.exports = {
     handleGetTopDoctors,
+    hanldeGetAllDoctors,
+    handleCreateDetailDoctor,
+
 }
