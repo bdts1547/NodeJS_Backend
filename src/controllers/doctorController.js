@@ -19,7 +19,26 @@ const hanldeGetAllDoctors = async (req, res) => {
     } catch (error) {
         return res.status(500).json({
             errCode: -1,
-            message: "Error from server"
+            message: "Error from the server"
+        })
+    }
+}
+
+const handleGetOneDoctor = async (req, res) => {
+    try {
+        if (!req.query.id) {
+            return res.status(200).json({
+                errCode: 1,
+                message: "Missing required parameters"
+            })
+        }
+
+        const info = await doctorService.getOneDoctor(req.query.id);
+        return res.status(200).json(info)
+    } catch (error) {
+        return res.status(500).json({
+            errCode: -1,
+            message: "Error from the server"
         })
     }
 }
@@ -27,19 +46,30 @@ const hanldeGetAllDoctors = async (req, res) => {
 const handleCreateDetailDoctor = async (req, res) => {
     try {
         const data = req.body.data;
-        console.log(data)
         const info = await doctorService.createDetailInforDoctor(data);
 
         return res.status(200).json({
             ...info
         })
     } catch (error) {
-        console.log(error)
         return res.status(500).json({
             errCode: -1,
-            message: "Error from server"
+            message: "Error from the server"
         })
         
+    }
+}
+
+const handleEditDetailDoctor = async (req, res) => {
+    try {
+        const data = req.body.data;
+        const info = await doctorService.editDetailDoctor(data)
+        return res.status(200).json(info)
+    } catch (error) {
+        return res.status(500).json({
+            errCode: -1,
+            message: 'Error from the server'
+        })
     }
 }
 
@@ -47,6 +77,8 @@ const handleCreateDetailDoctor = async (req, res) => {
 module.exports = {
     handleGetTopDoctors,
     hanldeGetAllDoctors,
+    handleGetOneDoctor,
     handleCreateDetailDoctor,
+    handleEditDetailDoctor,
 
 }

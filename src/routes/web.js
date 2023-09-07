@@ -14,17 +14,19 @@ const initWebRoutes = (app) => {
     router.post('/handle-edit-user', homeController.handleEditUser);
     router.get('/delete-user/:id', homeController.deletUser);
 
-    // admin-panel
+    // admin
     router.post('/api/login', userController.handleUserLogin);
     router.get('/api/get-all-users', userController.handleGetAllUsers);
     router.post('/api/create-new-user', userController.handleCreateNewUser);
     router.delete('/api/delete-user', userController.handleDeleteUser);
     router.put('/api/edit-user', userController.handleEditUser);
     router.get('/api/allcode', userController.handleGetAllCode);
-    
-    router.get('/api/get-all-doctors', doctorController.hanldeGetAllDoctors)
-    router.post('/api/create-detail-infor-doctor', doctorController.handleCreateDetailDoctor)
 
+    // doctor
+    router.get('/api/get-all-doctors', doctorController.hanldeGetAllDoctors);
+    router.get('/api/get-one-doctor', doctorController.handleGetOneDoctor);
+    router.post('/api/create-detail-doctor', doctorController.handleCreateDetailDoctor);
+    router.put('/api/edit-detail-doctor', doctorController.handleEditDetailDoctor);
 
 
 

@@ -49,6 +49,7 @@ const handleCreateNewUser = async (req, res) => {
 
 }
 
+
 const handleDeleteUser = async (req, res) => {
     const id = req.body.id;
     const info = await userService.deleteUserById(id);

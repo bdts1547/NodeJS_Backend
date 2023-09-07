@@ -11,8 +11,10 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      user.belongsTo(models.allcodes, { foreignKey: 'positionId', targetKey: 'code', as: 'positionData'})
-      user.belongsTo(models.allcodes, { foreignKey: 'gender', targetKey: 'code', as: 'genderData'})
+      user.belongsTo(models.allcodes, { foreignKey: 'positionId', targetKey: 'code', as: 'positionData' })
+      user.belongsTo(models.allcodes, { foreignKey: 'gender', targetKey: 'code', as: 'genderData' })
+      user.hasOne(models.markdown, { foreignKey: 'doctorId'})
+
     }
   };
   user.init({
