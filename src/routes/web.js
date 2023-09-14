@@ -27,7 +27,7 @@ const initWebRoutes = (app) => {
     router.get('/api/get-one-doctor', doctorController.handleGetOneDoctor);
     router.post('/api/create-detail-doctor', doctorController.handleCreateDetailDoctor);
     router.put('/api/edit-detail-doctor', doctorController.handleEditDetailDoctor);
-
+    router.get('/api/detail-doctor/:id', doctorController.handleGetOneDoctor);
 
 
     // home

@@ -57,10 +57,12 @@ const getOneDoctor = (doctorId) => {
             const doctor = await db.user.findOne({
                 where: { id: doctorId },
                 attributes: {
-                    exclude: ['password', 'image']
+                    exclude: ['password']
                 },
                 include: [
-                    { model: db.markdown }
+                    { model: db.markdown },
+                    { model: db.allcodes, as: 'positionData', attributes: ['valueVi', 'valueEn'] },
+                    { model: db.allcodes, as: 'genderData', attributes: ['valueVi', 'valueEn'] }
                 ],
                 raw: true,
                 nest: true,
