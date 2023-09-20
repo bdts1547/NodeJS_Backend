@@ -9,9 +9,8 @@ import cors from 'cors';
 require('dotenv').config();
 
 const app = express();
-
 const corsOptions ={
-    origin:[ process.env.URL_REACT ], 
+    origin: 'http://127.0.0.1:3000', 
     credentials:true,     
     optionSuccessStatus:200,
  }

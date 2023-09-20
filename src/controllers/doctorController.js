@@ -35,6 +35,7 @@ const handleGetOneDoctor = async (req, res) => {
 
         const info = await doctorService.getOneDoctor(req.query.id);
         return res.status(200).json(info)
+        
     } catch (error) {
         return res.status(500).json({
             errCode: -1,

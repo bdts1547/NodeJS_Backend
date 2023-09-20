@@ -67,6 +67,7 @@ const getOneDoctor = (doctorId) => {
                 raw: true,
                 nest: true,
             })
+
             resolve({
                 errCode: 0,
                 doctor: doctor
