@@ -159,8 +159,8 @@ const bulkCreateSchedule = (data) => {
                     message: "Missing required params",
                 })
             } else {
-                // Find schedule existing
-                const existing = await db.schedule.findAll({
+                // Find schedules existing
+                const existing = await db.schedules.findAll({
                     where: { doctorId: data.doctorId, date: data.formatDate },
                     attributes: ['doctorId', 'date', 'timeType']
                 })
@@ -181,7 +181,7 @@ const bulkCreateSchedule = (data) => {
                         item.maxNumber = MAX_NUMBER_SCHEDULE;
                     })
 
-                    await db.schedule.bulkCreate(toCreate);
+                    await db.schedules.bulkCreate(toCreate);
                 }
 
                 resolve({
@@ -197,6 +197,44 @@ const bulkCreateSchedule = (data) => {
     })
 }
 
+const getScheduleByDate = (doctorId, date) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            if (!doctorId || !date) {
+                resolve({
+                    errCode: 1,
+                    message: "Missing required params"
+                })
+            } else {
+                const data = await db.schedules.findAll({
+                    where: {
+                        doctorId: doctorId,
+                        date: new Date(+date),
+                    },
+                    include: [
+                        { model: db.allcodes, as: 'timeTypeData', attributes: ['valueVi', 'valueEn'] },
+                    ],
+                    raw: true,
+                    nest: true,
+
+                })
+
+
+                resolve({
+                    errCode: 0,
+                    message: 'OK',
+                    data
+                })
+            }
+
+
+        }
+        catch (error) {
+            reject(error);
+        }
+    })
+}
+
 module.exports = {
     getTopDoctors,
     getAllDoctors,
@@ -204,4 +242,5 @@ module.exports = {
     createDetailInforDoctor,
     editDetailDoctor,
     bulkCreateSchedule,
+    getScheduleByDate,
 }

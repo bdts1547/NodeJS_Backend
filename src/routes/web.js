@@ -33,6 +33,7 @@ const initWebRoutes = (app) => {
 
     // home
     router.get('/api/top-doctors-home', doctorController.handleGetTopDoctors); // todo
+    router.get('/api/get-schedule-by-date', doctorController.handleGetScheduleByDate); // todo
 
 
 
