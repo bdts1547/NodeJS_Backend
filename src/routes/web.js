@@ -28,6 +28,7 @@ const initWebRoutes = (app) => {
     router.post('/api/create-detail-doctor', doctorController.handleCreateDetailDoctor);
     router.put('/api/edit-detail-doctor', doctorController.handleEditDetailDoctor);
     router.get('/api/detail-doctor/:id', doctorController.handleGetOneDoctor);
+    router.post('/api/bulk-create-schedule', doctorController.handleBulkCreateSchedule); // todo
 
 
     // home

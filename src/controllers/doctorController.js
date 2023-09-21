@@ -74,6 +74,18 @@ const handleEditDetailDoctor = async (req, res) => {
     }
 }
 
+const handleBulkCreateSchedule = async (req, res) => {
+    try {
+        const data = req.body;
+        const info = await doctorService.bulkCreateSchedule(data);
+        return res.status(200).json(info)
+    } catch (error) {
+        return res.status(500).json({
+            error: -1,
+            message: "Error from the server",
+        })
+    }
+}
 
 module.exports = {
     handleGetTopDoctors,
@@ -81,5 +93,5 @@ module.exports = {
     handleGetOneDoctor,
     handleCreateDetailDoctor,
     handleEditDetailDoctor,
-
+    handleBulkCreateSchedule,
 }

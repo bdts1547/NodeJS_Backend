@@ -1,6 +1,9 @@
 import db from '../models/index';
+require('dotenv').config();
 
+import _ from 'lodash';
 
+const MAX_NUMBER_SCHEDULE = process.env.MAX_NUMBER_SCHEDULE;
 
 const getTopDoctors = (limit) => {
     return new Promise(async (resolve, reject) => {
@@ -113,14 +116,14 @@ const editDetailDoctor = (data) => {
                     errCode: 1,
                     message: "Missing required parameters"
                 })
-            } 
+            }
             else {
                 const doctor = await db.markdown.findOne({
                     where: { doctorId: data.doctorId },
                     raw: false
                 })
-                
-                if(doctor) {
+
+                if (doctor) {
                     doctor.contentHTML = data.contentHTML;
                     doctor.contentMD = data.contentMD;
                     doctor.description = data.description;
@@ -137,11 +140,58 @@ const editDetailDoctor = (data) => {
                         message: "Not found doctor to update!"
                     })
                 }
-    
+
             }
 
 
         } catch (error) {
+            reject(error);
+        }
+    })
+}
+
+const bulkCreateSchedule = (data) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            if (!data || !data.doctorId || !data.formatDate || !data.listSchedule) {
+                resolve({
+                    errCode: 1,
+                    message: "Missing required params",
+                })
+            } else {
+                // Find schedule existing
+                const existing = await db.schedule.findAll({
+                    where: { doctorId: data.doctorId, date: data.formatDate },
+                    attributes: ['doctorId', 'date', 'timeType']
+                })
+
+                // Format Date to compare
+                existing.forEach(item => {
+                    item.date = new Date(item.date).getTime();
+                })
+
+                // Compare existing and need create
+                const toCreate = _.differenceWith(data.listSchedule, existing, (a, b) => {
+                    return a.date === b.date && a.timeType === b.timeType;
+                })
+
+                // Create 
+                if (toCreate) {
+                    toCreate.forEach(item => {
+                        item.maxNumber = MAX_NUMBER_SCHEDULE;
+                    })
+
+                    await db.schedule.bulkCreate(toCreate);
+                }
+
+                resolve({
+                    errCode: 0,
+                    message: "OK"
+                })
+            }
+
+        }
+        catch (error) {
             reject(error);
         }
     })
@@ -153,4 +203,5 @@ module.exports = {
     getOneDoctor,
     createDetailInforDoctor,
     editDetailDoctor,
+    bulkCreateSchedule,
 }
